@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.securevault.controller.EntryDialogController"
+      prefWidth="500"
+      prefHeight="550"
+      styleClass="dialog-container">
+    
+    <!-- Scrollable Form Content -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="form-scroll-pane">
+        <VBox spacing="15" styleClass="form-content">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            
+            <!-- Title -->
+            <VBox spacing="5">
+                <Label text="Title *" styleClass="field-label"/>
+                <TextField fx:id="titleField" promptText="Entry title"/>
+            </VBox>
+            
+            <!-- Username -->
+            <VBox spacing="5">
+                <Label text="Username *" styleClass="field-label"/>
+                <TextField fx:id="usernameField" promptText="Username or email"/>
+            </VBox>
+            
+            <!-- Password -->
+            <VBox spacing="5">
+                <Label text="Password *" styleClass="field-label"/>
+                <HBox spacing="5">
+                    <PasswordField fx:id="passwordField" promptText="Password" HBox.hgrow="ALWAYS"/>
+                    <TextField fx:id="passwordVisibleField" promptText="Password" HBox.hgrow="ALWAYS"/>
+                    <Button text="Show" onAction="#handleTogglePassword" styleClass="small-button"/>
+                </HBox>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <ProgressBar fx:id="strengthBar" prefWidth="150"/>
+                    <Label fx:id="strengthLabel" text="" styleClass="strength-label"/>
+                </HBox>
+            </VBox>
+            
+            <!-- Password Generator -->
+            <TitledPane text="Password Generator" expanded="false" styleClass="generator-pane">
+                <VBox spacing="10">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Length:"/>
+                        <Spinner fx:id="lengthSpinner" prefWidth="80"/>
+                        <Button text="Generate" onAction="#handleGeneratePassword" styleClass="primary-button"/>
+                    </HBox>
+                    <HBox spacing="15">
+                        <CheckBox fx:id="uppercaseCheck" text="A-Z"/>
+                        <CheckBox fx:id="lowercaseCheck" text="a-z"/>
+                        <CheckBox fx:id="numbersCheck" text="0-9"/>
+                        <CheckBox fx:id="symbolsCheck" text="!@#$"/>
+                    </HBox>
+                </VBox>
+            </TitledPane>
+            
+            <!-- URL -->
+            <VBox spacing="5">
+                <Label text="URL" styleClass="field-label"/>
+                <TextField fx:id="urlField" promptText="https://example.com"/>
+            </VBox>
+            
+            <!-- Category -->
+            <VBox spacing="5">
+                <Label text="Category" styleClass="field-label"/>
+                <ComboBox fx:id="categoryCombo" maxWidth="Infinity"/>
+            </VBox>
+            
+            <!-- Notes -->
+            <VBox spacing="5">
+                <Label text="Notes" styleClass="field-label"/>
+                <TextArea fx:id="notesField" promptText="Additional notes..." prefRowCount="3" wrapText="true"/>
+            </VBox>
+        </VBox>
+    </ScrollPane>
+    
+    <!-- Buttons (always visible at bottom) -->
+    <HBox spacing="10" alignment="CENTER_RIGHT" styleClass="dialog-buttons">
+        <padding>
+            <Insets top="15" right="20" bottom="20" left="20"/>
+        </padding>
+        <Button text="Cancel" onAction="#handleCancel" styleClass="secondary-button"/>
+        <Button text="Save" onAction="#handleSave" styleClass="primary-button"/>
+    </HBox>
+</VBox>

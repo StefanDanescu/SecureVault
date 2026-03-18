@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.securevault.controller.SettingsController"
+      spacing="0"
+      styleClass="dialog-container"
+      VBox.vgrow="ALWAYS">
+    
+    <!-- App bar (fixed at top) -->
+    <ToolBar styleClass="toolbar">
+        <Button text="←" onAction="#handleBack" styleClass="secondary-button"/>
+        <Label text="Settings" styleClass="dialog-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Save" onAction="#handleSave" styleClass="primary-button"/>
+    </ToolBar>
+
+    <!-- Scrollable content -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="form-scroll-pane">
+        <VBox spacing="20" styleClass="form-content">
+            <padding>
+                <Insets top="10" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <!-- Security Settings -->
+    <TitledPane text="Security" expanded="true" collapsible="false">
+        <VBox spacing="15">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Auto-lock after" prefWidth="150"/>
+                <Spinner fx:id="autoLockSpinner" prefWidth="80" editable="true"/>
+                <Label text="minutes of inactivity"/>
+            </HBox>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Clear clipboard after" prefWidth="150"/>
+                <Spinner fx:id="clipboardClearSpinner" prefWidth="80" editable="true"/>
+                <Label text="seconds"/>
+            </HBox>
+
+            <CheckBox fx:id="showPasswordsCheck" text="Show passwords by default"/>
+        </VBox>
+    </TitledPane>
+
+    <!-- Password Generator Defaults -->
+    <TitledPane text="Password Generator Defaults" expanded="true" collapsible="false">
+        <VBox spacing="15">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Default length" prefWidth="150"/>
+                <Spinner fx:id="defaultLengthSpinner" prefWidth="80" editable="true"/>
+                <Label text="characters"/>
+            </HBox>
+
+            <Label text="Include by default:"/>
+            <HBox spacing="15">
+                <CheckBox fx:id="defaultUppercaseCheck" text="Uppercase (A-Z)"/>
+                <CheckBox fx:id="defaultLowercaseCheck" text="Lowercase (a-z)"/>
+            </HBox>
+            <HBox spacing="15">
+                <CheckBox fx:id="defaultNumbersCheck" text="Numbers (0-9)"/>
+                <CheckBox fx:id="defaultSymbolsCheck" text="Symbols (!@#$)"/>
+            </HBox>
+        </VBox>
+    </TitledPane>
+
+    <!-- Change master password -->
+    <TitledPane text="Change master password" expanded="true">
+        <VBox spacing="12">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <VBox spacing="4">
+                <Label text="Current password" styleClass="field-label"/>
+                <PasswordField fx:id="currentPasswordField" promptText="Enter current master password"/>
+            </VBox>
+            <VBox spacing="4">
+                <Label text="New password" styleClass="field-label"/>
+                <PasswordField fx:id="newPasswordField" promptText="Enter new master password"/>
+            </VBox>
+            <VBox spacing="4">
+                <Label text="Confirm new password" styleClass="field-label"/>
+                <PasswordField fx:id="confirmNewPasswordField" promptText="Confirm new master password"/>
+            </VBox>
+            <Label fx:id="changePasswordStatusLabel" text="" styleClass="status-label"/>
+            <Button text="Change password" onAction="#handleChangePassword" styleClass="primary-button"/>
+        </VBox>
+    </TitledPane>
+
+    <!-- Export vault -->
+    <TitledPane text="Export vault" expanded="true">
+        <VBox spacing="12">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <VBox spacing="4">
+                <Label text="Export location" styleClass="field-label"/>
+                <HBox spacing="8">
+                    <TextField fx:id="exportPathField" promptText="Choose a folder and filename for the vault file" HBox.hgrow="ALWAYS"/>
+                    <Button text="Browse..." onAction="#handleExportBrowse" styleClass="secondary-button"/>
+                </HBox>
+            </VBox>
+            <Label fx:id="exportStatusLabel" text="" styleClass="status-label"/>
+            <Button text="Export" onAction="#handleExport" styleClass="primary-button"/>
+        </VBox>
+    </TitledPane>
+
+        </VBox>
+    </ScrollPane>
+</VBox>

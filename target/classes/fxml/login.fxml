@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.securevault.controller.LoginController"
+      alignment="CENTER"
+      spacing="20"
+      styleClass="login-container">
+    
+    <padding>
+        <Insets top="50" right="50" bottom="50" left="50"/>
+    </padding>
+    
+    <!-- Logo/Title -->
+    <VBox alignment="CENTER" spacing="10">
+        <Label text="🔐" styleClass="logo-icon"/>
+        <Label fx:id="titleLabel" text="SecureVault" styleClass="app-title"/>
+        <Label text="Zero-Knowledge Password Manager" styleClass="app-subtitle"/>
+    </VBox>
+    
+    <!-- Login Form -->
+    <VBox alignment="CENTER" spacing="15" maxWidth="400">
+        <VBox spacing="5">
+            <Label text="Master Password" styleClass="field-label"/>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <PasswordField fx:id="masterPasswordField" 
+                               promptText="Enter your master password"
+                               styleClass="password-field"
+                               HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="passwordVisibleField"
+                           promptText="Enter your master password"
+                           styleClass="password-field"
+                           HBox.hgrow="ALWAYS"/>
+                <Button fx:id="togglePasswordButton" 
+                        text="Show" 
+                        onAction="#handleTogglePassword"
+                        styleClass="secondary-button"/>
+            </HBox>
+        </VBox>
+        
+        <VBox fx:id="confirmContainer" spacing="5">
+            <Label fx:id="confirmLabel" text="Confirm Password" styleClass="field-label"/>
+            <PasswordField fx:id="confirmPasswordField" 
+                           promptText="Confirm your master password"
+                           styleClass="password-field"/>
+        </VBox>
+        
+        <!-- Buttons -->
+        <HBox spacing="10" alignment="CENTER">
+            <Button fx:id="unlockButton" 
+                    text="Unlock" 
+                    onAction="#handleUnlock"
+                    styleClass="primary-button"
+                    defaultButton="true"/>
+            <Button fx:id="createButton" 
+                    text="Create New" 
+                    onAction="#handleCreate"
+                    styleClass="secondary-button"/>
+        </HBox>
+        
+        <Hyperlink text="Open existing vault file..." onAction="#handleOpenFile"/>
+        
+        <!-- Status -->
+        <Label fx:id="statusLabel" text="" styleClass="status-label"/>
+    </VBox>
+    
+    <!-- Footer -->
+    <VBox alignment="CENTER" spacing="5">
+        <Separator/>
+        <Label text="Your passwords are encrypted locally with AES-256-GCM" 
+               styleClass="footer-text"/>
+    </VBox>
+</VBox>

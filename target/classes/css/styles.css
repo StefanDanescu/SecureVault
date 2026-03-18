@@ -1,0 +1,442 @@
+/* SecureVault - Modern Dark Theme */
+
+/* ===== Root Variables ===== */
+.root {
+    /* Main background */
+    -fx-background-color: #2b2b2b;
+    -fx-font-family: "Segoe UI", "Roboto", sans-serif;
+    -fx-font-size: 14px;
+    
+    /* Color palette - grey with blue accent */
+    -sv-bg-primary: #333333;
+    -sv-bg-secondary: #3d3d3d;
+    -sv-bg-tertiary: #454545;
+    -sv-accent: #1e88e5;
+    -sv-accent-hover: #1565c0;
+    -sv-text-primary: #eaeaea;
+    -sv-text-secondary: #cccccc;
+    -sv-border: #505050;
+    -sv-success: #2ecc71;
+    -sv-warning: #f1c40f;
+    -sv-danger: #e74c3c;
+    
+    /* Strength meter colors */
+    -sv-strength-weak: #e74c3c;
+    -sv-strength-strong: #f1c40f;
+    -sv-strength-very-strong: #2ecc71;
+}
+
+/* ===== Login View ===== */
+.login-container {
+    -fx-background-color: linear-gradient(to bottom right, #2f2f2f, #3a3a3a);
+}
+
+.logo-icon {
+    -fx-font-size: 64px;
+    -fx-text-fill: #ffeb3b;
+}
+
+.app-title {
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -sv-text-primary;
+}
+
+.app-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: -sv-text-secondary;
+}
+
+.field-label {
+    -fx-text-fill: -sv-text-secondary;
+    -fx-font-size: 12px;
+}
+
+.password-field, .text-field {
+    -fx-background-color: -sv-bg-primary;
+    -fx-text-fill: -sv-text-primary;
+    -fx-prompt-text-fill: #666666;
+    -fx-border-color: -sv-border;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 10px;
+}
+
+.password-field:focused, .text-field:focused {
+    -fx-border-color: -sv-accent;
+}
+
+.footer-text {
+    -fx-text-fill: -sv-text-secondary;
+    -fx-font-size: 11px;
+}
+
+/* ===== Buttons ===== */
+.button {
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-cursor: hand;
+    -fx-padding: 8px 16px;
+}
+
+.primary-button {
+    -fx-background-color: -sv-accent;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.primary-button:hover {
+    -fx-background-color: -sv-accent-hover;
+}
+
+.secondary-button {
+    -fx-background-color: -sv-bg-tertiary;
+    -fx-text-fill: -sv-text-primary;
+    -fx-border-color: -sv-border;
+}
+
+.secondary-button:hover {
+    -fx-background-color: #505050;
+}
+
+.danger-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: -sv-danger;
+    -fx-border-color: -sv-danger;
+}
+
+.danger-button:hover {
+    -fx-background-color: -sv-danger;
+    -fx-text-fill: white;
+}
+
+.small-button {
+    -fx-background-color: -sv-bg-tertiary;
+    -fx-text-fill: -sv-text-primary;
+    -fx-padding: 5px 10px;
+    -fx-font-size: 11px;
+}
+
+.small-button:hover {
+    -fx-background-color: #505050;
+}
+
+/* ===== Vault View ===== */
+.vault-container {
+    -fx-background-color: -sv-bg-primary;
+}
+
+.toolbar {
+    -fx-background-color: -sv-bg-secondary;
+    -fx-padding: 10px;
+    -fx-spacing: 10px;
+}
+
+.sidebar {
+    -fx-background-color: -sv-bg-secondary;
+    -fx-border-color: -sv-border;
+    -fx-border-width: 0 1 0 0;
+}
+
+.section-title {
+    -fx-text-fill: -sv-text-secondary;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 10px 0;
+}
+
+/* ===== TreeView ===== */
+.tree-view {
+    -fx-background-color: transparent;
+}
+
+.tree-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: -sv-text-primary;
+    -fx-padding: 5px;
+}
+
+.tree-cell:selected {
+    -fx-background-color: -sv-bg-tertiary;
+}
+
+.tree-cell:hover {
+    -fx-background-color: rgba(30, 136, 229, 0.15);
+}
+
+/* ===== TableView ===== */
+.table-view {
+    -fx-background-color: -sv-bg-primary;
+    -fx-border-color: -sv-border;
+}
+
+.table-view .column-header {
+    -fx-background-color: -sv-bg-secondary;
+    -fx-border-color: -sv-border;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: -sv-text-secondary;
+    -fx-font-weight: bold;
+}
+
+.table-row-cell {
+    /* Password list base row color */
+    -fx-background-color: #3a3a3a;
+    -fx-border-color: transparent;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #414141;
+}
+
+.table-row-cell:selected,
+.table-row-cell:focused {
+    /* Focus / selection darker blue */
+    -fx-background-color: #1565c0;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: rgba(21, 101, 192, 0.4);
+}
+
+.table-cell {
+    -fx-text-fill: -sv-text-primary;
+    -fx-padding: 8px;
+}
+
+/* ===== Details Panel ===== */
+.details-panel {
+    -fx-background-color: -sv-bg-secondary;
+}
+
+.detail-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -sv-text-primary;
+}
+
+/* ===== Status Bar ===== */
+.status-bar {
+    -fx-background-color: -sv-bg-secondary;
+    -fx-border-color: -sv-border;
+    -fx-border-width: 1 0 0 0;
+}
+
+.status-bar .label {
+    -fx-text-fill: -sv-text-secondary;
+    -fx-font-size: 12px;
+}
+
+.status-label {
+    -fx-text-fill: -sv-text-secondary;
+}
+
+/* ===== Progress Bar (Strength Meter) ===== */
+.progress-bar {
+    -fx-background-color: -sv-bg-tertiary;
+    -fx-background-radius: 3px;
+    -fx-accent: -sv-danger;
+}
+
+.progress-bar .track {
+    -fx-background-color: -sv-bg-tertiary;
+    -fx-background-radius: 3px;
+}
+
+.progress-bar .bar {
+    -fx-background-color: -fx-accent;
+    -fx-background-radius: 3px;
+    -fx-background-insets: 0;
+}
+
+.strength-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: -sv-text-secondary;
+}
+
+/* ===== Dialog Styles ===== */
+.dialog-container {
+    -fx-background-color: -sv-bg-primary;
+}
+
+.dialog-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -sv-text-primary;
+}
+
+.form-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: -sv-bg-primary;
+    -fx-border-color: transparent;
+}
+
+.form-scroll-pane > .viewport {
+    -fx-background-color: -sv-bg-primary;
+}
+
+.form-content {
+    -fx-background-color: -sv-bg-primary;
+}
+
+.dialog-buttons {
+    -fx-background-color: -sv-bg-primary;
+    -fx-border-color: -sv-border;
+    -fx-border-width: 1 0 0 0;
+}
+
+/* ===== TitledPane ===== */
+.titled-pane {
+    -fx-text-fill: -sv-text-primary;
+}
+
+.titled-pane > .title {
+    -fx-background-color: -sv-bg-secondary;
+    -fx-border-color: -sv-border;
+}
+
+.titled-pane > .title > .text {
+    -fx-fill: -sv-text-primary;
+}
+
+.titled-pane > .content {
+    -fx-background-color: -sv-bg-secondary;
+    -fx-border-color: -sv-border;
+}
+
+.generator-pane {
+    -fx-text-fill: -sv-text-primary;
+}
+
+/* ===== ComboBox ===== */
+.combo-box {
+    -fx-background-color: -sv-bg-secondary;
+    -fx-border-color: -sv-border;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: -sv-text-primary;
+    -fx-background-color: -sv-bg-secondary;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: -sv-bg-secondary;
+}
+
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: -sv-bg-tertiary;
+}
+
+/* ===== Spinner ===== */
+.spinner {
+    -fx-background-color: -sv-bg-secondary;
+    -fx-border-color: -sv-border;
+    -fx-border-radius: 5px;
+}
+
+.spinner .text-field {
+    -fx-background-color: transparent;
+}
+
+.spinner .increment-arrow-button,
+.spinner .decrement-arrow-button {
+    -fx-background-color: -sv-bg-tertiary;
+}
+
+/* ===== CheckBox ===== */
+.check-box {
+    -fx-text-fill: -sv-text-primary;
+}
+
+.check-box .box {
+    -fx-background-color: -sv-bg-secondary;
+    -fx-border-color: -sv-border;
+    -fx-border-radius: 3px;
+}
+
+.check-box:selected .box {
+    -fx-background-color: -sv-accent;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: white;
+}
+
+/* ===== TextArea ===== */
+.text-area {
+    -fx-background-color: -sv-bg-secondary;
+    -fx-text-fill: -sv-text-primary;
+    -fx-border-color: -sv-border;
+    -fx-border-radius: 5px;
+}
+
+.text-area .content {
+    -fx-background-color: -sv-bg-secondary;
+}
+
+/* ===== Separator ===== */
+.separator {
+    -fx-background-color: -sv-border;
+}
+
+.separator .line {
+    -fx-border-color: -sv-border;
+}
+
+/* ===== Hyperlink ===== */
+.hyperlink {
+    -fx-text-fill: -sv-accent;
+}
+
+.hyperlink:hover {
+    -fx-text-fill: -sv-accent-hover;
+}
+
+/* ===== ScrollBar ===== */
+.scroll-bar {
+    -fx-background-color: -sv-bg-secondary;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: -sv-bg-tertiary;
+    -fx-background-radius: 5px;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #2a5a8a;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+}
+
+/* ===== SplitPane ===== */
+.split-pane {
+    -fx-background-color: -sv-bg-primary;
+}
+
+.split-pane-divider {
+    -fx-background-color: -sv-border;
+    -fx-padding: 0 2 0 2;
+}
+
+/* ===== Alert/Dialog ===== */
+.alert {
+    -fx-background-color: -sv-bg-primary;
+}
+
+.dialog-pane {
+    -fx-background-color: -sv-bg-primary;
+}
+
+.dialog-pane .content {
+    -fx-text-fill: -sv-text-primary;
+}
+
+.dialog-pane .header-panel {
+    -fx-background-color: -sv-bg-secondary;
+}

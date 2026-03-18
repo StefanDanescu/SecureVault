@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.securevault.controller.VaultController"
+            styleClass="vault-container">
+    
+    <!-- Top Toolbar -->
+    <top>
+        <ToolBar styleClass="toolbar">
+            <Button text="+ Add" onAction="#handleAddEntry" styleClass="primary-button"/>
+            <Button text="Edit" onAction="#handleEditEntry" styleClass="secondary-button"/>
+            <Button text="Delete" onAction="#handleDeleteEntry" styleClass="danger-button"/>
+            <Separator orientation="VERTICAL"/>
+            <TextField fx:id="searchField" promptText="Search..." prefWidth="200"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Settings" onAction="#handleSettings" styleClass="secondary-button"/>
+            <Button text="Lock" onAction="#handleLock" styleClass="secondary-button"/>
+        </ToolBar>
+    </top>
+    
+    <!-- Left Panel - Categories -->
+    <left>
+        <VBox prefWidth="200" styleClass="sidebar">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Label text="Categories" styleClass="section-title"/>
+            <TreeView fx:id="categoryTree" VBox.vgrow="ALWAYS"/>
+        </VBox>
+    </left>
+    
+    <!-- Center - Entry List and Details -->
+    <center>
+        <SplitPane fx:id="mainSplitPane" dividerPositions="0.5" orientation="HORIZONTAL">
+            <!-- Entry List -->
+            <VBox>
+                <TableView fx:id="entryTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="titleColumn" text="Title" prefWidth="150"/>
+                        <TableColumn fx:id="usernameColumn" text="Username" prefWidth="150"/>
+                        <TableColumn fx:id="urlColumn" text="URL" prefWidth="200"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="No entries. Click '+ Add' to create one."/>
+                    </placeholder>
+                </TableView>
+            </VBox>
+            
+            <!-- Entry Details -->
+            <VBox fx:id="detailsBox" spacing="15" styleClass="details-panel">
+                <padding>
+                    <Insets top="15" right="15" bottom="15" left="15"/>
+                </padding>
+                
+                <!-- Header with title and collapse button -->
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label fx:id="detailTitle" text="" styleClass="detail-title" HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="detailsToggleButton"
+                            text="-"
+                            onAction="#handleToggleDetailsPanel"
+                            styleClass="small-button"/>
+                </HBox>
+                
+                <!-- Details content (hidden until an entry is selected) -->
+                <VBox fx:id="detailsContentBox" spacing="10">
+                    <VBox spacing="5">
+                        <Label text="Username" styleClass="field-label"/>
+                        <HBox spacing="5">
+                            <TextField fx:id="detailUsername" editable="false" HBox.hgrow="ALWAYS"/>
+                            <Button text="Copy" onAction="#handleCopyUsername" styleClass="small-button"/>
+                        </HBox>
+                    </VBox>
+                    
+                    <VBox spacing="5">
+                        <Label text="Password" styleClass="field-label"/>
+                        <HBox spacing="5">
+                            <PasswordField fx:id="detailPassword" editable="false" HBox.hgrow="ALWAYS"/>
+                            <TextField fx:id="detailPasswordVisible" editable="false" HBox.hgrow="ALWAYS"/>
+                            <Button text="Show" onAction="#handleTogglePassword" styleClass="small-button"/>
+                            <Button text="Copy" onAction="#handleCopyPassword" styleClass="small-button"/>
+                        </HBox>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <ProgressBar fx:id="strengthBar" prefWidth="150"/>
+                            <Label fx:id="strengthLabel" text="" styleClass="strength-label"/>
+                        </HBox>
+                    </VBox>
+                    
+                    <VBox spacing="5">
+                        <Label text="URL" styleClass="field-label"/>
+                        <TextField fx:id="detailUrl" editable="false"/>
+                    </VBox>
+                    
+                    <VBox spacing="5" VBox.vgrow="ALWAYS">
+                        <Label text="Notes" styleClass="field-label"/>
+                        <TextArea fx:id="detailNotes" editable="false" VBox.vgrow="ALWAYS" wrapText="true"/>
+                    </VBox>
+                </VBox>
+            </VBox>
+        </SplitPane>
+    </center>
+    
+    <!-- Bottom Status Bar -->
+    <bottom>
+        <HBox styleClass="status-bar" alignment="CENTER_LEFT" spacing="10">
+            <padding>
+                <Insets top="5" right="10" bottom="5" left="10"/>
+            </padding>
+            <Label fx:id="statusLabel" text="Ready"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="entryCountLabel" text="0 entries"/>
+        </HBox>
+    </bottom>
+</BorderPane>
