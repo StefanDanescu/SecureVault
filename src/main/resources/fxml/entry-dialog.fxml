@@ -40,7 +40,7 @@
                 </HBox>
                 <HBox spacing="10" alignment="CENTER_LEFT">
                     <ProgressBar fx:id="strengthBar" prefWidth="150"/>
-                    <Label fx:id="strengthLabel" text="" styleClass="strength-label"/>
+                    <Label fx:id="strengthLabel" styleClass="strength-label"/>
                 </HBox>
             </VBox>
             
