@@ -52,7 +52,7 @@
                     </padding>
                     <HBox spacing="10" alignment="CENTER_LEFT">
                         <Label text="Length:"/>
-                        <Spinner fx:id="lengthSpinner" prefWidth="80"/>
+                        <Spinner fx:id="lengthSpinner" prefWidth="80" editable="true"/>
                         <Button text="Generate" onAction="#handleGeneratePassword" styleClass="primary-button"/>
                     </HBox>
                     <HBox spacing="15">
