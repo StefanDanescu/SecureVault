@@ -20,25 +20,6 @@ A secure, local-first password manager built with JavaFX that uses industry-stan
 - Java 21 or later
 - Maven 3.8 or later
 
-## Building
-
-```bash
-# Clone and navigate to project
-cd SecureVault
-
-# Build with Maven
-mvn clean package
-
-# Run the application
-mvn javafx:run
-```
-
-## Running Tests
-
-```bash
-mvn test
-```
-
 ## Security Design
 
 ### Cryptographic Choices
