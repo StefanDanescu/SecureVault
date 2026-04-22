@@ -1,7 +1,10 @@
 package com.securevault.controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 import com.securevault.model.Category;
 import com.securevault.model.PasswordEntry;
@@ -12,10 +15,16 @@ import com.securevault.service.VaultService;
 import com.securevault.util.AutoLockTimer;
 
 import javafx.beans.property.SimpleStringProperty;
+import javafx.animation.PauseTransition;
+import javafx.animation.FadeTransition;
+import javafx.animation.SequentialTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.application.Platform;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -25,6 +34,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -32,13 +42,17 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  * Controller for the main vault view.
  * 
  * Manages the display and interaction with password entries.
  */
+@SuppressWarnings("unused")
 public class VaultController {
 
     @FXML private TreeView<Category> categoryTree;
@@ -61,18 +75,19 @@ public class VaultController {
     @FXML private ProgressBar strengthBar;
     @FXML private Label strengthLabel;
     @FXML private SplitPane mainSplitPane;
-    @FXML private javafx.scene.layout.VBox detailsBox;
     @FXML private javafx.scene.layout.VBox detailsContentBox;
 
     private VaultService vaultService;
-    private ClipboardService clipboardService;
-    private PasswordStrength passwordStrength;
+    private final ClipboardService clipboardService;
+    private final PasswordStrength passwordStrength;
     private AutoLockTimer autoLockTimer;
 
-    private ObservableList<PasswordEntry> entryList;
+    private final ObservableList<PasswordEntry> entryList;
     private PasswordEntry selectedEntry;
     private boolean passwordVisible = false;
     private boolean detailsCollapsed = true;
+    private static final long PASSWORD_MAX_AGE_DAYS = 90;
+    private Popup activeToast;
 
     public VaultController() {
         this.clipboardService = new ClipboardService();
@@ -90,6 +105,37 @@ public class VaultController {
         // Setup table columns
         titleColumn.setCellValueFactory(data -> 
             new SimpleStringProperty(data.getValue().getTitle()));
+        titleColumn.setCellFactory(column -> new TableCell<>() {
+            private final Label warningIcon = new Label("⚠");
+            private final Label titleLabel = new Label();
+            private final HBox cellContainer = new HBox(6, warningIcon, titleLabel);
+
+            {
+                warningIcon.getStyleClass().add("outdated-warning-icon");
+                titleLabel.getStyleClass().add("entry-title-label");
+                warningIcon.setVisible(false);
+                warningIcon.setManaged(false);
+                cellContainer.setAlignment(Pos.CENTER_LEFT);
+            }
+
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || getTableRow() == null || getTableRow().getItem() == null) {
+                    setText(null);
+                    setGraphic(null);
+                    return;
+                }
+
+                PasswordEntry rowEntry = getTableRow().getItem();
+                titleLabel.setText(item == null ? "" : item);
+                boolean outdated = isPasswordOutdated(rowEntry);
+                warningIcon.setVisible(outdated);
+                warningIcon.setManaged(outdated);
+                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+                setGraphic(cellContainer);
+            }
+        });
         usernameColumn.setCellValueFactory(data -> 
             new SimpleStringProperty(data.getValue().getUsername()));
         urlColumn.setCellValueFactory(data -> 
@@ -97,7 +143,7 @@ public class VaultController {
 
         entryTable.setItems(entryList);
         // Make columns fill available width
-        entryTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        entryTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
 
         // Selection listener
         entryTable.getSelectionModel().selectedItemProperty().addListener(
@@ -165,6 +211,89 @@ public class VaultController {
         detailPassword.setManaged(!passwordVisible);
 
         statusLabel.setText("Vault unlocked");
+        statusLabel.setStyle("");
+        showOutdatedPasswordToastIfNeeded(vault.getEntries());
+    }
+
+    private boolean isPasswordOutdated(PasswordEntry entry) {
+        if (entry == null) {
+            return false;
+        }
+
+        Instant reference = entry.getModifiedAt();
+        if (reference == null) {
+            reference = entry.getCreatedAt();
+        }
+        if (reference == null) {
+            return false;
+        }
+
+        Instant cutoff = Instant.now().minus(PASSWORD_MAX_AGE_DAYS, ChronoUnit.DAYS);
+        return reference.isBefore(cutoff);
+    }
+
+    private void showOutdatedPasswordToastIfNeeded(List<PasswordEntry> entries) {
+        long outdatedCount = entries.stream()
+            .filter(this::isPasswordOutdated)
+            .count();
+
+        if (outdatedCount <= 0) {
+            return;
+        }
+
+        String message = outdatedCount + " password(s) may be outdated. Please update them.";
+        Platform.runLater(() -> showToast(message));
+    }
+
+    private void showToast(String message) {
+        if (entryTable == null || entryTable.getScene() == null || entryTable.getScene().getWindow() == null) {
+            return;
+        }
+
+        if (activeToast != null && activeToast.isShowing()) {
+            activeToast.hide();
+        }
+
+        Label toastLabel = new Label(message);
+        toastLabel.getStyleClass().add("toast-label");
+        toastLabel.setOpacity(0);
+
+        Popup popup = new Popup();
+        popup.setAutoFix(true);
+        popup.setAutoHide(false);
+        popup.getContent().add(toastLabel);
+        activeToast = popup;
+
+        Stage stage = (Stage) entryTable.getScene().getWindow();
+        popup.show(stage);
+
+        toastLabel.applyCss();
+        toastLabel.layout();
+        double x = stage.getX() + (stage.getWidth() - toastLabel.getWidth()) / 2.0;
+        double y = stage.getY() + stage.getHeight() - toastLabel.getHeight() - 60;
+        popup.setX(x);
+        popup.setY(y);
+
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(220), toastLabel);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+
+        PauseTransition visibleTime = new PauseTransition(Duration.seconds(3.2));
+
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(380), toastLabel);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+
+        SequentialTransition toastTimeline = new SequentialTransition(fadeIn, visibleTime, fadeOut);
+        toastTimeline.setOnFinished(event -> {
+            if (popup.isShowing()) {
+                popup.hide();
+            }
+            if (activeToast == popup) {
+                activeToast = null;
+            }
+        });
+        toastTimeline.play();
     }
 
     private void showEntryDetails(PasswordEntry entry) {
@@ -353,7 +482,7 @@ public class VaultController {
             scene.getStylesheets().add(
                 getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
-        } catch (Exception e) {
+        } catch (IOException e) {
             showError("Failed to open settings: " + e.getMessage());
         }
     }
@@ -379,11 +508,12 @@ public class VaultController {
             scene.getStylesheets().add(
                 getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
-        } catch (Exception e) {
+        } catch (IOException e) {
             showError("Failed to open entry dialog: " + e.getMessage());
         }
     }
 
+    @SuppressWarnings("java:S2221")
     private void saveAndRefresh() {
         try {
             vaultService.saveVault();
@@ -405,7 +535,7 @@ public class VaultController {
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
 
             stage.setScene(scene);
-        } catch (Exception e) {
+        } catch (IOException e) {
             showError("Failed to open login: " + e.getMessage());
         }
     }

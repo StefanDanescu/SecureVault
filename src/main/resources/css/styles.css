@@ -205,6 +205,26 @@
     -fx-padding: 8px;
 }
 
+.outdated-warning-icon {
+    -fx-text-fill: -sv-warning;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.entry-title-label {
+    -fx-text-fill: -sv-text-primary;
+}
+
+.toast-label {
+    -fx-background-color: rgba(25, 25, 25, 0.95);
+    -fx-text-fill: -sv-text-primary;
+    -fx-padding: 10px 16px;
+    -fx-font-size: 15px;
+    -fx-background-radius: 8px;
+    -fx-border-color: -sv-border;
+    -fx-border-radius: 8px;
+}
+
 /* ===== Details Panel ===== */
 .details-panel {
     -fx-background-color: -sv-bg-secondary;
