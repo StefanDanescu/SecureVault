@@ -8,7 +8,6 @@ import java.util.UUID;
 
 /**
  * Represents a single password entry in the vault.
- * 
  * Contains all the fields for storing credentials including
  * title, username, password, URL, notes, and metadata.
  */
@@ -35,6 +34,7 @@ public class PasswordEntry {
         this.modifiedAt = Instant.now();
     }
 
+    @SuppressWarnings("unused")
     public PasswordEntry(String title, String username, String password) {
         this();
         this.title = title;
@@ -48,6 +48,7 @@ public class PasswordEntry {
         return id;
     }
 
+    @SuppressWarnings("unused")
     public void setId(String id) {
         this.id = id;
     }
@@ -121,6 +122,7 @@ public class PasswordEntry {
         return passwordHistory;
     }
 
+    @SuppressWarnings("unused")
     public void setPasswordHistory(List<String> passwordHistory) {
         if (passwordHistory == null) {
             this.passwordHistory = new ArrayList<>();
@@ -134,6 +136,7 @@ public class PasswordEntry {
         return createdAt;
     }
 
+    @SuppressWarnings("unused")
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
@@ -142,6 +145,7 @@ public class PasswordEntry {
         return modifiedAt;
     }
 
+    @SuppressWarnings("unused")
     public void setModifiedAt(Instant modifiedAt) {
         this.modifiedAt = modifiedAt;
     }
@@ -149,6 +153,7 @@ public class PasswordEntry {
     /**
      * Updates the modified timestamp to the current time.
      */
+    @SuppressWarnings("unused")
     public void touch() {
         this.modifiedAt = Instant.now();
     }
@@ -175,9 +180,9 @@ public class PasswordEntry {
         if (passwordHistory == null) {
             return;
         }
-
-        while (passwordHistory.size() > PASSWORD_HISTORY_LIMIT) {
-            passwordHistory.remove(0);
+        int overflow = passwordHistory.size() - PASSWORD_HISTORY_LIMIT;
+        if (overflow > 0) {
+            passwordHistory.subList(0, overflow).clear();
         }
     }
 

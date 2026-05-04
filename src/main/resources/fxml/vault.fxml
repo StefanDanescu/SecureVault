@@ -36,7 +36,7 @@
     
     <!-- Center - Entry List and Details -->
     <center>
-        <SplitPane fx:id="mainSplitPane" dividerPositions="0.5" orientation="HORIZONTAL">
+        <SplitPane fx:id="mainSplitPane">
             <!-- Entry List -->
             <VBox>
                 <TableView fx:id="entryTable" VBox.vgrow="ALWAYS">
@@ -52,14 +52,14 @@
             </VBox>
             
             <!-- Entry Details -->
-            <VBox fx:id="detailsBox" spacing="15" styleClass="details-panel">
+            <VBox spacing="15" styleClass="details-panel">
                 <padding>
                     <Insets top="15" right="15" bottom="15" left="15"/>
                 </padding>
                 
                 <!-- Header with title and collapse button -->
                 <HBox spacing="8" alignment="CENTER_LEFT">
-                    <Label fx:id="detailTitle" text="" styleClass="detail-title" HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="detailTitle" styleClass="detail-title" HBox.hgrow="ALWAYS"/>
                     <Button fx:id="detailsToggleButton"
                             text="-"
                             onAction="#handleToggleDetailsPanel"
@@ -86,7 +86,7 @@
                         </HBox>
                         <HBox spacing="10" alignment="CENTER_LEFT">
                             <ProgressBar fx:id="strengthBar" prefWidth="150"/>
-                            <Label fx:id="strengthLabel" text="" styleClass="strength-label"/>
+                            <Label fx:id="strengthLabel" styleClass="strength-label"/>
                         </HBox>
                     </VBox>
                     
