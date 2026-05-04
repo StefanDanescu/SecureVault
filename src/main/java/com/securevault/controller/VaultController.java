@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 import com.securevault.model.Category;
@@ -72,6 +74,7 @@ public class VaultController {
     @FXML private TextField detailPasswordVisible;
     @FXML private TextField detailUrl;
     @FXML private TextArea detailNotes;
+    @FXML private TextField detailLastChanged;
     @FXML private ProgressBar strengthBar;
     @FXML private Label strengthLabel;
     @FXML private SplitPane mainSplitPane;
@@ -87,6 +90,8 @@ public class VaultController {
     private boolean passwordVisible = false;
     private boolean detailsCollapsed = true;
     private static final long PASSWORD_MAX_AGE_DAYS = 90;
+    private static final DateTimeFormatter LAST_CHANGED_FORMATTER =
+        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withZone(ZoneId.systemDefault());
     private Popup activeToast;
 
     public VaultController() {
@@ -314,6 +319,7 @@ public class VaultController {
         detailPassword.setText(entry.getPassword());
         detailUrl.setText(entry.getUrl());
         detailNotes.setText(entry.getNotes());
+        detailLastChanged.setText(formatLastChanged(entry));
 
         // Update strength indicator
         updateStrengthIndicator(entry.getPassword());
@@ -365,8 +371,20 @@ public class VaultController {
         detailPassword.setText("");
         detailUrl.setText("");
         detailNotes.setText("");
+        detailLastChanged.setText("");
         strengthBar.setProgress(0);
         strengthLabel.setText("");
+    }
+
+    private String formatLastChanged(PasswordEntry entry) {
+        Instant timestamp = entry.getModifiedAt();
+        if (timestamp == null) {
+            timestamp = entry.getCreatedAt();
+        }
+        if (timestamp == null) {
+            return "Unknown";
+        }
+        return LAST_CHANGED_FORMATTER.format(timestamp);
     }
 
     private void updateStrengthIndicator(String password) {

@@ -2,6 +2,8 @@ package com.securevault.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -20,11 +22,15 @@ public class PasswordEntry {
     private String url;
     private String notes;
     private String categoryId;
+    private List<String> passwordHistory;
     private Instant createdAt;
     private Instant modifiedAt;
 
+    private static final int PASSWORD_HISTORY_LIMIT = 5;
+
     public PasswordEntry() {
         this.id = UUID.randomUUID().toString();
+        this.passwordHistory = new ArrayList<>();
         this.createdAt = Instant.now();
         this.modifiedAt = Instant.now();
     }
@@ -69,6 +75,14 @@ public class PasswordEntry {
     }
 
     public void setPassword(String password) {
+        if (this.passwordHistory == null) {
+            this.passwordHistory = new ArrayList<>();
+        }
+
+        if (this.password != null && !this.password.isEmpty() && !this.password.equals(password)) {
+            this.passwordHistory.add(this.password);
+            trimPasswordHistory();
+        }
         this.password = password;
         this.modifiedAt = Instant.now();
     }
@@ -100,6 +114,22 @@ public class PasswordEntry {
         this.modifiedAt = Instant.now();
     }
 
+    public List<String> getPasswordHistory() {
+        if (passwordHistory == null) {
+            passwordHistory = new ArrayList<>();
+        }
+        return passwordHistory;
+    }
+
+    public void setPasswordHistory(List<String> passwordHistory) {
+        if (passwordHistory == null) {
+            this.passwordHistory = new ArrayList<>();
+        } else {
+            this.passwordHistory = new ArrayList<>(passwordHistory);
+            trimPasswordHistory();
+        }
+    }
+
     public Instant getCreatedAt() {
         return createdAt;
     }
@@ -121,6 +151,34 @@ public class PasswordEntry {
      */
     public void touch() {
         this.modifiedAt = Instant.now();
+    }
+
+    /**
+     * Returns true if candidate matches any of the last {@code count} old passwords.
+     */
+    public boolean usesRecentPassword(String candidate, int count) {
+        if (candidate == null || candidate.isEmpty()) {
+            return false;
+        }
+
+        List<String> history = getPasswordHistory();
+        int checks = Math.min(count, history.size());
+        for (int i = history.size() - 1; i >= history.size() - checks; i--) {
+            if (candidate.equals(history.get(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void trimPasswordHistory() {
+        if (passwordHistory == null) {
+            return;
+        }
+
+        while (passwordHistory.size() > PASSWORD_HISTORY_LIMIT) {
+            passwordHistory.remove(0);
+        }
     }
 
     @Override

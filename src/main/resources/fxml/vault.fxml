@@ -99,6 +99,11 @@
                         <Label text="Notes" styleClass="field-label"/>
                         <TextArea fx:id="detailNotes" editable="false" VBox.vgrow="ALWAYS" wrapText="true"/>
                     </VBox>
+
+                    <VBox spacing="5">
+                        <Label text="Last Changed" styleClass="field-label"/>
+                        <TextField fx:id="detailLastChanged" editable="false"/>
+                    </VBox>
                 </VBox>
             </VBox>
         </SplitPane>

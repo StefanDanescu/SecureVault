@@ -52,6 +52,7 @@ public class EntryDialogController {
     private boolean isNew = true;
     private boolean saved = false;
     private boolean passwordVisible = false;
+    private static final int PASSWORD_REUSE_CHECK_COUNT = 3;
 
     public EntryDialogController() {
         this.passwordGenerator = new PasswordGenerator();
@@ -177,10 +178,17 @@ public class EntryDialogController {
             return;
         }
 
+        String newPassword = passwordField.getText();
+        if (!isNew && entry.getPassword() != null && !entry.getPassword().equals(newPassword)
+                && entry.usesRecentPassword(newPassword, PASSWORD_REUSE_CHECK_COUNT)) {
+            showError("You cannot reuse any of your last 3 passwords.");
+            return;
+        }
+
         // Update entry
         entry.setTitle(titleField.getText().trim());
         entry.setUsername(usernameField.getText().trim());
-        entry.setPassword(passwordField.getText());
+        entry.setPassword(newPassword);
         entry.setUrl(urlField.getText().trim());
         entry.setNotes(notesField.getText());
 
