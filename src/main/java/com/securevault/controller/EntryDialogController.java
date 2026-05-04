@@ -1,5 +1,9 @@
 package com.securevault.controller;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.Objects;
+
 import com.securevault.model.Category;
 import com.securevault.model.PasswordEntry;
 import com.securevault.model.Vault;
@@ -50,7 +54,6 @@ public class EntryDialogController {
     private VaultService vaultService;
     private PasswordEntry entry;
     private boolean isNew = true;
-    private boolean saved = false;
     private boolean passwordVisible = false;
     private static final int PASSWORD_REUSE_CHECK_COUNT = 3;
 
@@ -141,6 +144,7 @@ public class EntryDialogController {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void handleGeneratePassword() {
         int length = lengthSpinner.getValue();
         String password = passwordGenerator.generate(
@@ -154,6 +158,7 @@ public class EntryDialogController {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void handleTogglePassword() {
         passwordVisible = !passwordVisible;
         passwordVisibleField.setVisible(passwordVisible);
@@ -163,6 +168,7 @@ public class EntryDialogController {
     }
 
     @FXML
+    @SuppressWarnings({"unused", "java:S2221"})
     private void handleSave() {
         // Validate required fields
         if (titleField.getText().trim().isEmpty()) {
@@ -209,11 +215,11 @@ public class EntryDialogController {
             return;
         }
 
-        saved = true;
         returnToVaultView();
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void handleCancel() {
         returnToVaultView();
     }
@@ -240,14 +246,18 @@ public class EntryDialogController {
 
             Stage stage = (Stage) titleField.getScene().getWindow();
             Scene scene = new Scene(root, stage.getScene().getWidth(), stage.getScene().getHeight());
-            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            scene.getStylesheets().add(stylesheetUrl());
             stage.setScene(scene);
-        } catch (Exception e) {
+        } catch (IOException e) {
             showError("Failed to open vault: " + e.getMessage());
         }
     }
 
-    public boolean isSaved() {
-        return saved;
+    private String stylesheetUrl() {
+        URL resource = Objects.requireNonNull(
+            getClass().getResource("/css/styles.css"),
+            "Missing stylesheet resource: /css/styles.css"
+        );
+        return resource.toExternalForm();
     }
 }

@@ -1,6 +1,8 @@
 package com.securevault.controller;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.Objects;
 import java.util.List;
 import java.util.Optional;
 import java.time.Instant;
@@ -51,10 +53,8 @@ import javafx.util.Duration;
 
 /**
  * Controller for the main vault view.
- * 
  * Manages the display and interaction with password entries.
  */
-@SuppressWarnings("unused")
 public class VaultController {
 
     @FXML private TreeView<Category> categoryTree;
@@ -326,6 +326,7 @@ public class VaultController {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void handleToggleDetailsPanel() {
         if (detailsCollapsed) {
             expandDetailsPanel();
@@ -426,11 +427,13 @@ public class VaultController {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void handleAddEntry() {
         openEntryDialog(null);
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void handleEditEntry() {
         if (selectedEntry != null) {
             openEntryDialog(selectedEntry);
@@ -438,6 +441,7 @@ public class VaultController {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void handleDeleteEntry() {
         if (selectedEntry == null) return;
 
@@ -454,6 +458,7 @@ public class VaultController {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void handleCopyUsername() {
         if (selectedEntry != null && selectedEntry.getUsername() != null) {
             clipboardService.copy(selectedEntry.getUsername());
@@ -462,6 +467,7 @@ public class VaultController {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void handleCopyPassword() {
         if (selectedEntry != null && selectedEntry.getPassword() != null) {
             clipboardService.copyWithAutoClear(selectedEntry.getPassword());
@@ -471,6 +477,7 @@ public class VaultController {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void handleTogglePassword() {
         passwordVisible = !passwordVisible;
         detailPasswordVisible.setVisible(passwordVisible);
@@ -487,6 +494,7 @@ public class VaultController {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void handleSettings() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/settings.fxml"));
@@ -497,8 +505,7 @@ public class VaultController {
 
             Stage stage = (Stage) entryTable.getScene().getWindow();
             Scene scene = new Scene(root, stage.getScene().getWidth(), stage.getScene().getHeight());
-            scene.getStylesheets().add(
-                getClass().getResource("/css/styles.css").toExternalForm());
+            scene.getStylesheets().add(stylesheetUrl());
             stage.setScene(scene);
         } catch (IOException e) {
             showError("Failed to open settings: " + e.getMessage());
@@ -523,8 +530,7 @@ public class VaultController {
 
             Stage stage = (Stage) entryTable.getScene().getWindow();
             Scene scene = new Scene(root, stage.getScene().getWidth(), stage.getScene().getHeight());
-            scene.getStylesheets().add(
-                getClass().getResource("/css/styles.css").toExternalForm());
+            scene.getStylesheets().add(stylesheetUrl());
             stage.setScene(scene);
         } catch (IOException e) {
             showError("Failed to open entry dialog: " + e.getMessage());
@@ -550,12 +556,20 @@ public class VaultController {
             double w = stage.getScene().getWidth();
             double h = stage.getScene().getHeight();
             Scene scene = new Scene(root, w, h);
-            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            scene.getStylesheets().add(stylesheetUrl());
 
             stage.setScene(scene);
         } catch (IOException e) {
             showError("Failed to open login: " + e.getMessage());
         }
+    }
+
+    private String stylesheetUrl() {
+        URL resource = Objects.requireNonNull(
+            getClass().getResource("/css/styles.css"),
+            "Missing stylesheet resource: /css/styles.css"
+        );
+        return resource.toExternalForm();
     }
 
     private void showError(String message) {
